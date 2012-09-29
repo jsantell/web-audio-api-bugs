@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>AudioNodes do not alter audio from MediaElementAudioSource</title>
+		<style>#data{ color: #ff0077; font-weight: bold;}</style>
+	</head>
+	<body>
+		<h1>AudioNodes do not alter audio from MediaElementAudioSource</h1>
+		<p>This has a MediaElementAudioSource -> Gain (with gain @ 100) -> destination</p>
+		<p>In Chrome, you can hear the distortion -- in Safari, there is no change.</p>
+		<audio controls="controls">
+			<source src="../../audio/song.mp3" type="audio/mpeg" />
+			<source src="../../audio/song.ogg" type="audio/ogg" />
+		</audio>
+		<script>
+		(function () {
+			var ctx, proc, src, color,
+			audio = document.getElementsByTagName('audio')[0],
+			dataEl = document.getElementById('data');
+		
+			audio.readyState < 3 ?
+				audio.addEventListener('canplay', connect) :
+				connect();
+			
+			function connect () {
+				ctx = new webkitAudioContext(),
+				gain = ctx.createGainNode(),
+				src = ctx.createMediaElementSource(audio);
+
+				gain.gain.value = 100;
+				src.connect( gain );
+				//src.connect( ctx.destination );
+				gain.connect( ctx.destination );
+			}
+		})();
+		</script>
+	</body>
+</html>
