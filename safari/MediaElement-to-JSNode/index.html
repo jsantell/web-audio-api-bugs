@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Web Audio API Test</title>
+		<style>#data{ color: #ff0077; font-weight: bold;}</style>
+	</head>
+	<body>
+		<h1>Processing audio from Media Element Source</h1>
+		<h2>Works in Chrome, fails in Safari</h2>
+		<audio controls="controls">
+			<source src="../../audio/song.mp3" type="audio/mpeg" />
+			<source src="../../audio/song.ogg" type="audio/ogg" />
+		</audio>
+		<div id="data">Data not yet found</div>
+		<script>
+		(function () {
+			var ctx, proc, src, color,
+			audio = document.getElementsByTagName('audio')[0],
+			dataEl = document.getElementById('data');
+		
+			audio.readyState < 3 ?
+				audio.addEventListener('canplay', connect) :
+				connect();
+			
+			function connect () {
+				ctx = new webkitAudioContext(),
+				proc = ctx.createJavaScriptNode(2048),
+				src = ctx.createMediaElementSource(audio);
+	
+				proc.onaudioprocess = function (e) {
+					var d = e.inputBuffer.getChannelData(0)[0];
+					if (d) {
+						color || (color = dataEl.style.color = '#aaee22');
+						dataEl.innerHTML = 'Data found: ' + d;
+					}
+				}
+				src.connect( proc );
+				src.connect( ctx.destination );
+				proc.connect( ctx.destination );
+			}
+		})();
+		</script>
+	</body>
+</html>

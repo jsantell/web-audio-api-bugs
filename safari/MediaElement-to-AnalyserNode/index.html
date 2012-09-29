@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Web Audio API Test</title>
+		<style>#data{ color: #ff0077; font-weight: bold;}</style>
+	</head>
+	<body>
+		<h1>Processing audio from Media Element Source</h1>
+		<h2>Works in Chrome, fails in Safari</h2>
+		<audio controls="controls">
+			<source src="../../audio/song.mp3" type="audio/mpeg" />
+			<source src="../../audio/song.ogg" type="audio/ogg" />
+		</audio>
+		<div>getFloatFrequencyData(): <span id="data-float-freq"></span></div>
+		<div>getByteFrequencyData(): <span id="data-byte-freq"></span></div>
+		<div>getByteTimeDomainData(): <span id="data-byte-time"></span></div>
+		<script>
+		(function () {
+			var ctx, proc, src, color,
+			audio = document.getElementsByTagName('audio')[0],
+			floatFreqEl = document.getElementById('data-float-freq'),
+			byteFreqEl = document.getElementById('data-byte-freq'),
+			byteTimeEl = document.getElementById('data-byte-time'),
+			floatFrequency, byteFrequency, byteTimeDomain;
+		
+			audio.readyState < 3 ?
+				audio.addEventListener('canplay', connect) :
+				connect();
+			
+			function connect () {
+				ctx = new webkitAudioContext(),
+				analyser = ctx.createAnalyser(),
+				src = ctx.createMediaElementSource(audio);
+console.log(analyser.fftSize, analyser.frequencyBinCount);
+				floatFrequency = new Float32Array( analyser.fftSize )
+				byteFrequency = new Uint8Array( analyser.fftSize );
+				byteTimeDomain = new Uint8Array( analyser.frequencyBinCount );
+
+				src.connect( analyser );
+				analyser.connect( ctx.destination );
+				render();
+			}
+
+			function render () {
+				webkitRequestAnimationFrame( render );
+				analyser.getByteFrequencyData( byteFrequency );
+				analyser.getFloatFrequencyData( floatFrequency );
+				analyser.getByteTimeDomainData( byteTimeDomain );
+
+				floatFreqEl.innerHTML = floatFrequency[0];
+				byteFreqEl.innerHTML = byteFrequency[0];
+				byteTimeEl.innerHTML = byteTimeDomain[0];
+			}
+		})();
+		</script>
+	</body>
+</html>
