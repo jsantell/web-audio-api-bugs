@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Web Audio API Test</title>
+		<title>All Analyser Node methods do not update when using Media Element source in Safari 6</title>
 		<style>#data{ color: #ff0077; font-weight: bold;}</style>
 	</head>
 	<body>
-		<h1>Processing audio from Media Element Source</h1>
+		<h1>All Analyser Node methods do not update when using Media Element source in Safari 6</h1>
 		<h2>Works in Chrome, fails in Safari</h2>
+		<p>When using a MediaElementAudioSource node and connecting to a RealtimeAnalyserNode, the analyser node's methods getByteFrequencyData, getFloatFrequencyData and getByteTimeDomainData do not change as the audio progresses. This works as intended when using a different source, such as an oscillator or AudioBuffer.</p>
 		<audio controls="controls">
 			<source src="../../audio/song.mp3" type="audio/mpeg" />
 			<source src="../../audio/song.ogg" type="audio/ogg" />
@@ -31,7 +32,7 @@
 				ctx = new webkitAudioContext(),
 				analyser = ctx.createAnalyser(),
 				src = ctx.createMediaElementSource(audio);
-console.log(analyser.fftSize, analyser.frequencyBinCount);
+
 				floatFrequency = new Float32Array( analyser.fftSize )
 				byteFrequency = new Uint8Array( analyser.fftSize );
 				byteTimeDomain = new Uint8Array( analyser.frequencyBinCount );

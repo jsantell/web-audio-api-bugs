@@ -1,3 +1,6 @@
+# Audio Processing with JS Node and Media Element Source in Safari 6 not returning data
+## Apple Problem ID #12035428
+
 * Works in Chrome v21, fails in Safari 6/iOS6
 * Fails in Safari 6
 * Fails in iOS6

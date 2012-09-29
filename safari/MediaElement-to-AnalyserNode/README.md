@@ -1,3 +1,6 @@
+# All Analyser Node methods do not update when using Media Element source in Safari 6
+## Apple Problem ID #12400561
+
 * Works in Chrome v21, fails in Safari 6/iOS6
 * Fails in Safari 6
 * Fails in iOS6
