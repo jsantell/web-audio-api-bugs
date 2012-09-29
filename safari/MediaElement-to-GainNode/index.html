@@ -6,8 +6,12 @@
 	</head>
 	<body>
 		<h1>AudioNodes do not alter audio from MediaElementAudioSource</h1>
+		<p>When using a MediaElementAudioSource node and connecting to an AudioNode, there is no change in audio, as if the AudioNode is being circumvented.</p>
+		<p>As per the spec for createMediaElementSource:</p>
+		<p><em>As a consequence of calling this method, audio playback from the HTMLMediaElement will be re-routed into the processing graph of the AudioContext.</em></p>
 		<p>This has a MediaElementAudioSource -> Gain (with gain @ 100) -> destination</p>
 		<p>In Chrome, you can hear the distortion -- in Safari, there is no change.</p>
+		<p>This works fine when using a different source, such as an oscillator or AudioBuffer.</p>
 		<audio controls="controls">
 			<source src="../../audio/song.mp3" type="audio/mpeg" />
 			<source src="../../audio/song.ogg" type="audio/ogg" />
@@ -29,7 +33,6 @@
 
 				gain.gain.value = 100;
 				src.connect( gain );
-				//src.connect( ctx.destination );
 				gain.connect( ctx.destination );
 			}
 		})();
