@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ScriptProcessorNode requires an output to call audioprocess event</title>
+	</head>
+	<body>
+		<h1>ScriptProcessorNode requires an output to call audioprocess event</h1>
+		<p>When using a ScriptProcessorNode, an output is required to be connected ultimately to the destination. This works on Firefox, fails in webkit implementations.</p>
+		<ul>
+			<li>Works: Firefox 26</li>
+			<li>Fails: Chrome 33, 35</li>
+			<li>Fails: Safari 6.1</li>
+		</ul>
+		<p>An oscillator plays and a debugging message should be printed to the textfield.</p>
+		<textarea id="text" style="width:500px;height:500px;" width="500px" height="500px"></textarea>
+		<script>
+		(function () {
+			var $text = document.getElementById("text");
+			var ctx = new (window.AudioContext || window.webkitAudioContext)();
+			var osc = ctx.createOscillator();
+			var proc = ctx[ctx.createScriptProcessor ? 'createScriptProcessor' : 'createJavaScriptNode'](256);
+
+			osc.connect(proc);
+			osc.connect(ctx.destination);
+
+			osc.start(0);
+			proc.onaudioprocess = function () {
+				$text.value = $text.value + "audioprocessevent! ";
+			};
+
+		})();
+		</script>
+	</body>
+</html>
